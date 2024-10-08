@@ -1,4 +1,5 @@
 import pygame
+import Shapes
 
 pygame.init()
 
@@ -20,6 +21,8 @@ gameSurface.fill((0,0,0))
 nextPieceSurface = pygame.Surface((200, 200))
 nextPieceSurface.fill((0,0,0))
 
+Shapes.getShape(0, gameSurface)
+
 # control FPS
 clock = pygame.time.Clock()
 
@@ -29,6 +32,13 @@ def drawGrid():
             rect = pygame.Rect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)
             pygame.draw.rect(gameSurface, (50,50,50), rect, 1)
 
+ # draw screen and surfaces
+drawGrid()
+screen.fill((150,150,150))
+screen.blit(gameSurface, (10,10))
+screen.blit(nextPieceSurface, (SCREEN_WIDTH/2 + 100, SCREEN_HEIGHT/2 - 50))
+pygame.display.flip()
+
 # game loop
 run = True
 while run:
@@ -36,13 +46,6 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-    # draw screen and surfaces
-    screen.fill((150,150,150))
-    drawGrid()
-    screen.blit(gameSurface, (10,10))
-    screen.blit(nextPieceSurface, (SCREEN_WIDTH/2 + 100, SCREEN_HEIGHT/2 - 50))
-    pygame.display.flip()
     clock.tick(24)
 
 pygame.quit()
