@@ -1,7 +1,10 @@
 import pygame
 import Shapes
+import random
 
 pygame.init()
+pygame.font.init()
+my_font = pygame.font.SysFont('tahoma', 30)
 
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 600
@@ -21,7 +24,22 @@ gameSurface.fill((0,0,0))
 nextPieceSurface = pygame.Surface((200, 200))
 nextPieceSurface.fill((0,0,0))
 
-Shapes.getShape(0, gameSurface)
+score = '0'
+textNextPiece = my_font.render('Next Piece', False, (0, 0, 0))
+textScoreLabel = my_font.render('Score', False, (0, 0, 0))
+textScore = my_font.render(score, False, (0, 0, 0))
+
+rand = random.randint(0, 6)
+shape = Shapes.Shape()
+shape.x =  SCREEN_WIDTH//4
+shape.y = -75
+shape.getShape(rand, gameSurface)
+
+randForNext = random.randint(0, 6)
+nextShape = Shapes.Shape()
+nextShape.x = 85
+nextShape.y = 75
+nextShape.getNextShape(randForNext, nextPieceSurface)
 
 # control FPS
 clock = pygame.time.Clock()
@@ -36,9 +54,13 @@ def drawGrid():
 drawGrid()
 screen.fill((150,150,150))
 screen.blit(gameSurface, (10,10))
-screen.blit(nextPieceSurface, (SCREEN_WIDTH/2 + 100, SCREEN_HEIGHT/2 - 50))
+screen.blit(nextPieceSurface, (SCREEN_WIDTH//2 + 100, SCREEN_HEIGHT//2- 75))
+screen.blit(textNextPiece, (SCREEN_WIDTH//2 + 128, SCREEN_HEIGHT//2- 125))
+screen.blit(textScoreLabel, (SCREEN_WIDTH//2 + 150, SCREEN_HEIGHT//2- 250))
+screen.blit(textScore, (SCREEN_WIDTH//2 + 180, SCREEN_HEIGHT//2- 195))
 pygame.display.flip()
 
+counter = 0
 # game loop
 run = True
 while run:
@@ -46,7 +68,18 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-    clock.tick(24)
+    
+    if(counter == 30):
+        shape.moveDown()
+        gameSurface.fill((0,0,0,))
+        drawGrid()
+        shape.getShape(rand, gameSurface)
+        screen.blit(gameSurface, (10,10))
+        pygame.display.flip()
+        counter = 0
+    
+    counter = counter + 1
+    clock.tick(60)
 
 pygame.quit()
 
